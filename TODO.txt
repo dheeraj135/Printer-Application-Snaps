@@ -1,0 +1,4 @@
+### Set GS_LIB Path
+Manually invoking ippprint:
+1. CUPS_SERVERBIN
+2. GS_LIB["GS_LIB=/snap/printer-applications/current/usr/share/ghostscript/9.26/Resource/Init"]

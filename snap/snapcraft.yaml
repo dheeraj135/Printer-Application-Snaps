@@ -17,6 +17,8 @@ apps:
     command: bin/ippprint
   run-ippeveprinter:
     command: bin/ippeveprinter
+    environment:
+     GS_LIB: "/snap/printer-applications/current/usr/share/ghostscript/9.26/Resource/Init"
 
 parts:
   server:
@@ -46,9 +48,7 @@ parts:
       - libcups2
       - libavahi-common3
       - libavahi-client3
-      - libcups2-dev
       - libgss3
-      - libgss-dev
 
     override-build: |
       autoreconf
@@ -76,26 +76,72 @@ parts:
     - --enable-new-hpcups
     - --datadir=/usr/share/
     build-packages:
+    - libcups2-dev
+    - libcups2
     - python-dev
     - perl
     - automake
     - autoconf
     - m4
     - libusb-1.0-0-dev
+    - libsnmp-dev
     build-environment:
     - "CUPS_DATADIR" : "/root/parts/ippsample/install/share/cups/"
     stage-packages:
       - python-dev
       - libcups2-dev
-      - libcups2
-      - libsnmp-dev
-      - libusb-1.0-0-dev
-  
-  copy:
+      - libsnmp30
+      - libusb-1.0-0
+    override-build: |
+      snapcraftctl build
+      cp /lib/libImageProcessor* $SNAPCRAFT_PART_INSTALL/lib/
+      rm $SNAPCRAFT_PART_INSTALL/lib/libImageProcessor.so
+      cd $SNAPCRAFT_PART_INSTALL/lib/ && ln -s libImageProcessor*.so libImageProcessor.so
+
+  # copy:
+  #   plugin: dump
+  #   source: /lib/
+  #   after: [hplip]
+  #   prime:
+  #     - lib/libImageProcessor*
+  #   organize:
+  #    /lib/libImageProcessor*: lib/
+
+  cups-filters-filters:
     plugin: dump
-    source: /lib/
-    after: [hplip]
+    source: ./temp
+    stage-packages:
+    - cups-filters
+    - cups
     prime:
-      - lib/libImageProcessor.so
+    - usr/lib/cups/filter/
+    stage:
+    - usr/lib/cups/filter/
     organize:
-     /lib/libImageProcessor.so: lib/
+     /usr/lib/cups/filter/* : usr/lib/cups/filter/
+  
+  cups-filters-mime:
+    plugin: dump
+    source: ./temp
+    stage-packages:
+    - cups-filters
+    - cups
+    prime:
+    - usr/share/cups/mime/
+    stage:
+    - usr/share/cups/mime/
+    organize:
+     /usr/share/cups/mime/* : usr/share/cups/mime/
+
+  libraries:
+    plugin: dump
+    source: ./temp
+    prime:
+    - .
+    stage:
+    - .
+    stage-packages:
+    - libqpdf21
+    - libcupsfilters1
+    - ghostscript
+     
