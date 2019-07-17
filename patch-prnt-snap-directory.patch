@@ -1,0 +1,33 @@
+diff -ruN ./io/hpmud/model.c ../hplipMod/io/hpmud/model.c
+--- ./io/hpmud/model.c	2019-06-26 18:37:00.000000000 +0530
++++ ../hplipMod/io/hpmud/model.c	2019-07-17 16:09:16.356039928 +0530
+@@ -98,14 +98,17 @@
+    char rcbuf[255];
+    char section[32];
+    char *tail;
++   char fileName[2048];
+    FILE *inFile = NULL;
+    int stat=1;
+ 
+    homedir[0] = 0;
+-        
+-   if((inFile = fopen(CONFDIR "/hplip.conf", "r")) == NULL) 
++
++   char *snap = (getenv("SNAP")?strdup(getenv("SNAP")):strdup(""));
++   snprintf(fileName,sizeof(fileName),"%s/%s/hplip.conf",snap,CONFDIR);
++   if((inFile = fopen(fileName, "r")) == NULL) 
+    {
+-      BUG("unable to open %s: %m\n", CONFDIR "/hplip.conf");
++      BUG("unable to open %s: %m\n", fileName);
+       goto bugout;
+    } 
+ 
+@@ -124,7 +127,7 @@
+ 
+       if ((strncasecmp(section, "[dirs]", 6) == 0) && (strcasecmp(key, "home") == 0))
+       {
+-         strncpy(homedir, value, sizeof(homedir));
++         snprintf(homedir,sizeof(homedir),"%s/%s",snap,value);
+          break;  /* done */
+       }
+    }
