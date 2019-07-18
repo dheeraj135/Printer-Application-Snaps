@@ -62,25 +62,16 @@ parts:
       - autoconf
       - m4
       - libudev-dev
-      - libpthread-stubs0-dev
       - libavahi-client-dev
       - libavahi-common-dev
       - libavahi-common3
       - libavahi-client3
-      - zlib1g-dev
       - libgnutls28-dev
-      - libgss3
-      - libgss-dev
-      - zlib1g
-      - liblzma5
-      - libusb-1.0-0-dev
 
     stage-packages:
       - libcups2
       - libavahi-common3
       - libavahi-client3
-      - libgss3
-      - libusb-1.0-0
       - udev
 
     override-build: |
@@ -141,7 +132,7 @@ parts:
     build-environment:
       - "CUPS_DATADIR" : "/root/parts/ippsample/install/share/cups/"
     stage-packages:
-      - python-dev
+      - python
       - libcups2-dev
       - libsnmp30
       - libusb-1.0-0
@@ -151,27 +142,3 @@ parts:
       cp /lib/libImageProcessor* $SNAPCRAFT_PART_INSTALL/lib/
       rm $SNAPCRAFT_PART_INSTALL/lib/libImageProcessor.so
       cd $SNAPCRAFT_PART_INSTALL/lib/ && ln -s libImageProcessor*.so libImageProcessor.so
-
-  # copy:
-  #   plugin: dump
-  #   source: /lib/
-  #   after: [hplip]
-  #   prime:
-  #     - lib/libImageProcessor*
-  #   organize:
-  #    /lib/libImageProcessor*: lib/
-
-
-  # cups-filters-mime:
-  #   plugin: dump
-  #   source: ./temp
-  #   stage-packages:
-  #   - cups-filters
-  #   - cups
-  #   prime:
-  #   - usr/share/cups/mime/
-  #   stage:
-  #   - usr/share/cups/mime/
-  #   organize:
-  #    /usr/share/cups/mime/* : usr/share/cups/mime/
-
