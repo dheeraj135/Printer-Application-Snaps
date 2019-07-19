@@ -14,6 +14,7 @@ apps:
     daemon: simple
     environment:
      GS_LIB: "/snap/hplip-printer-application/current/usr/share/ghostscript/9.26/Resource/Init"
+     PYTHONPATH: "/snap/hplip-printer-application/current/lib/python2.7/site-packages/"
     plugs: 
     -  network 
     -  network-bind
@@ -23,6 +24,8 @@ apps:
     -  hardware-observe
   run-deviced:
     command: bin/deviced
+    environment:
+      PYTHONPATH: "/snap/hplip-printer-application/current/lib/python2.7/site-packages/"
   run-ippprint:
     command: bin/ippprint
     environment:
@@ -38,6 +41,7 @@ parts:
   ippsample:
     plugin: autotools
     source: https://github.com/dheeraj135/ippsample.git
+    #source: ./ippsample
     # organize:
     #   lib/libcups.a: lib/ippsample/libcups.a
     configflags:
@@ -45,7 +49,7 @@ parts:
     build-packages:
     - libcups2-dev
     - zlib1g
-    - liblzma5  
+    - liblzma5
     organize: 
       lib/libcups.a : lib/cups/
 
@@ -53,6 +57,7 @@ parts:
     # See 'snapcraft plugins'
     plugin: autotools
     source: https://github.com/dheeraj135/Printer-Applications-Framework.git
+    #source: ./Printer-Applications-Framework/
     source-type: git
     build-packages:
       - libcups2
@@ -112,6 +117,7 @@ parts:
   hplip:
     plugin: autotools
     source: https://sourceforge.net/projects/hplip/files/hplip/3.19.6/hplip-3.19.6.tar.gz
+    #source: ./hplipMod
     after: [server]
     configflags:
       - --disable-scan-build
@@ -122,7 +128,7 @@ parts:
     build-packages:
       - libcups2-dev
       - libcups2
-      - python-dev
+      - python2.7-dev
       - perl
       - automake
       - autoconf
@@ -132,12 +138,14 @@ parts:
     build-environment:
       - "CUPS_DATADIR" : "/root/parts/ippsample/install/share/cups/"
     stage-packages:
-      - python
+      - python2.7
       - libcups2-dev
       - libsnmp30
       - libusb-1.0-0
+      - python-dbus
     override-build: |
       patch -p0 < ../../../project/patch-prnt-snap-directory.patch
+      patch -p0 < ../../../project/hpfax-snap-directories.patch
       snapcraftctl build
       cp /lib/libImageProcessor* $SNAPCRAFT_PART_INSTALL/lib/
       rm $SNAPCRAFT_PART_INSTALL/lib/libImageProcessor.so
