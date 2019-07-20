@@ -1,0 +1,5 @@
+/* */
+#define PKGMODULEDIR "/usr/local/lib/gutenprint/5.2/modules" --> STP_MODULE_PATH
+
+/* */
+#define PKGXMLDATADIR "/usr/local/share/gutenprint/5.2/xml"  --> STP_DATA_PATH

@@ -6,25 +6,58 @@ description: |
   This snap aims to provide modular snaps for Gutenprint printer driver packages.
 
 grade: devel # must be 'stable' to release into candidate/stable channels
-confinement: devmode # use 'strict' once you have the right plugs and slots
+confinement: strict # use 'strict' once you have the right plugs and slots
 
 apps:
   run-server:
     command: bin/server
+    daemon: simple
+    environment:
+     GS_LIB: "/snap/hplip-printer-application/current/usr/share/ghostscript/9.26/Resource/Init"
+     PYTHONPATH: "/snap/hplip-printer-application/current/lib/python2.7/site-packages/"
+    plugs: 
+    -  network 
+    -  network-bind
+    -  avahi-control
+    -  raw-usb
+    -  home
+    -  hardware-observe
   run-deviced:
     command: bin/deviced
+    environment:
+      PYTHONPATH: "/snap/hplip-printer-application/current/lib/python2.7/site-packages/"
   run-ippprint:
     command: bin/ippprint
+    environment:
+     GS_LIB: "/snap/hplip-printer-application/current/usr/share/ghostscript/9.26/Resource/Init"
+
   run-ippeveprinter:
     command: bin/ippeveprinter
-  run-guten:
-    command: usr/lib/cups/driver/gutenprint.5.2
+    environment:
+     GS_LIB: "/snap/printer-application/current/usr/share/ghostscript/9.26/Resource/Init"
+    plugs: [network, network-bind, avahi-control, raw-usb]
 
 parts:
+  ippsample:
+    plugin: autotools
+    source: https://github.com/dheeraj135/ippsample.git
+    #source: ./ippsample
+    # organize:
+    #   lib/libcups.a: lib/ippsample/libcups.a
+    configflags:
+      - --datarootdir=/usr/share/
+    build-packages:
+    - libcups2-dev
+    - zlib1g
+    - liblzma5
+    organize: 
+      lib/libcups.a : lib/cups/
+
   server:
     # See 'snapcraft plugins'
     plugin: autotools
-    source: ./Printer-Applications-Framework
+    source: https://github.com/dheeraj135/Printer-Applications-Framework.git
+    #source: ./Printer-Applications-Framework/
     source-type: git
     build-packages:
       - libcups2
@@ -34,23 +67,17 @@ parts:
       - autoconf
       - m4
       - libudev-dev
-      - libpthread-stubs0-dev
       - libavahi-client-dev
       - libavahi-common-dev
       - libavahi-common3
       - libavahi-client3
-      - zlib1g-dev
       - libgnutls28-dev
-      - libgss3
-      - libgss-dev
 
     stage-packages:
       - libcups2
       - libavahi-common3
       - libavahi-client3
-      - libcups2-dev
-      - libgss3
-      - libgss-dev
+      - udev
 
     override-build: |
       autoreconf
@@ -58,15 +85,33 @@ parts:
 
     after: [ippsample]
   
-  ippsample:
-    plugin: autotools
-    source: ./ippsample
-    # organize:
-    #   lib/libcups.a: lib/ippsample/libcups.a
-    configflags:
-      - --datarootdir=/usr/share/
-    build-packages:
-    -  libcups2-dev
+  cups-filters:
+    plugin: dump
+    source: ./temp
+    stage-packages:
+    - cups-filters
+    - cups
+    prime:
+    - usr/lib/cups/filter/
+    - usr/share/cups/mime/
+    stage:
+    - usr/lib/cups/filter/
+    - usr/share/cups/mime/
+    organize:
+     /usr/lib/cups/filter/* : usr/lib/cups/filter/
+     /usr/share/cups/mime/* : usr/share/cups/mime/
+
+  libraries:
+    plugin: dump
+    source: ./temp
+    prime:
+    - .
+    stage:
+    - .
+    stage-packages:
+    - libqpdf21
+    - libcupsfilters1
+    - ghostscript
 
   gutenprint:
     plugin: autotools
@@ -74,56 +119,11 @@ parts:
     after: [server]
     configflags:
     - --enable-cups-1_2-enhancements
-    - --enable-cups-ppds
+    - --with-modules=dlopen
+    - --disable-static
     build-packages:
-      - libcups2
       - libcups2-dev
-      - libpthread-stubs0-dev
-      - libavahi-client-dev
-      - libavahi-common-dev
-      - libavahi-common3
-      - libavahi-client3
-      - zlib1g-dev
-      - libgnutls28-dev
-      - libgss3
-      - libgss-dev
+      - libusb-1.0-0-dev
     stage-packages:
       - libcups2
-      - libavahi-common3
-      - libavahi-client3
-      - libcups2-dev
-      - libgss3
-      - libgss-dev
-  # hplip:
-  #   plugin: autotools
-  #   source: ./hplip-3.19.6.tar.gz
-  #   after: [server]
-  #   configflags:
-  #   - --disable-scan-build
-  #   - --prefix=/
-  #   - --enable-new-hpcups
-  #   - --datadir=/usr/share/
-  #   build-packages:
-  #   - python-dev
-  #   - perl
-  #   - automake
-  #   - autoconf
-  #   - m4
-  #   - libusb-1.0-0-dev
-  #   build-environment:
-  #   - "CUPS_DATADIR" : "/root/parts/ippsample/install/share/cups/"
-  #   stage-packages:
-  #     - python-dev
-  #     - libcups2-dev
-  #     - libcups2
-  #     - libsnmp-dev
-  #     - libusb-1.0-0-dev
-  
-  # copy:
-  #   plugin: dump
-  #   source: /lib/
-  #   after: [hplip]
-  #   prime:
-  #     - lib/libImageProcessor.so
-  #   organize:
-  #    /lib/libImageProcessor.so: lib/
+      - libusb-1.0-0
