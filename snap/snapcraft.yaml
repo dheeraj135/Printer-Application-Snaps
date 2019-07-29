@@ -13,8 +13,9 @@ apps:
     command: bin/server
     daemon: simple
     environment:
-     GS_LIB: "/snap/hplip-printer-application/current/usr/share/ghostscript/9.26/Resource/Init"
-     PYTHONPATH: "/snap/hplip-printer-application/current/lib/python2.7/site-packages/"
+     GS_LIB: "/snap/$SNAP_NAME/current/usr/share/ghostscript/9.26/Resource/Init"
+     PYTHONPATH: "/snap/$SNAP_NAME/current/lib/python2.7/site-packages/"
+     SNAP_BACKENDS: "hp,hpfax"
     plugs: 
     -  network 
     -  network-bind
@@ -25,16 +26,24 @@ apps:
   run-deviced:
     command: bin/deviced
     environment:
-      PYTHONPATH: "/snap/hplip-printer-application/current/lib/python2.7/site-packages/"
+      PYTHONPATH: "/snap/$SNAP_NAME/current/lib/python2.7/site-packages/"
+      SNAP_BACKENDS: "hp,hpfax"
+    plugs: 
+    -  network 
+    -  network-bind
+    -  avahi-control
+    -  raw-usb
+    -  home
+    -  hardware-observe
   run-ippprint:
     command: bin/ippprint
     environment:
-     GS_LIB: "/snap/hplip-printer-application/current/usr/share/ghostscript/9.26/Resource/Init"
+     GS_LIB: "/snap/$SNAP_NAME/current/usr/share/ghostscript/9.26/Resource/Init"
 
   run-ippeveprinter:
     command: bin/ippeveprinter
     environment:
-     GS_LIB: "/snap/printer-application/current/usr/share/ghostscript/9.26/Resource/Init"
+     GS_LIB: "/snap/$SNAP_NAME/current/usr/share/ghostscript/9.26/Resource/Init"
     plugs: [network, network-bind, avahi-control, raw-usb]
 
 parts:
@@ -89,17 +98,29 @@ parts:
     plugin: dump
     source: ./temp
     stage-packages:
-    - cups-filters
-    - cups
+     - cups-filters
+     - cups
     prime:
-    - usr/lib/cups/filter/
-    - usr/share/cups/mime/
+     - usr/lib/cups/filter/
+     - usr/share/cups/mime/
+     - usr/lib/cups/backend/
+     - -usr/lib/cups/backend/driverless
+     - -usr/lib/cups/backend/cups-brf
+     - etc/cups/snmp.conf
+     - usr/share/cups/usb/
     stage:
-    - usr/lib/cups/filter/
-    - usr/share/cups/mime/
+     - usr/lib/cups/filter/
+     - usr/share/cups/mime/
+     - usr/lib/cups/backend/
+     - etc/cups/snmp.conf
+     - usr/share/cups/usb/
     organize:
-     /usr/lib/cups/filter/* : usr/lib/cups/filter/
-     /usr/share/cups/mime/* : usr/share/cups/mime/
+     #  /usr/lib/cups/filter/* : usr/lib/cups/filter/
+     #  /usr/share/cups/mime/* : usr/share/cups/mime/
+     #  /usr/lib/cups/backend/*: usr/lib/cups/backend/
+      usr/lib/cups/backend-available/* : usr/lib/cups/backend/
+     #  /etc/cups/snmp.conf: etc/cups/snmp.conf
+     #  /usr/share/cups/usb/: usr/share/cups/usb/
 
   libraries:
     plugin: dump
