@@ -1,9 +1,9 @@
-name: hplip-printer-application # you probably want to 'snapcraft register <name>'
+name: foomatic-printer-application # you probably want to 'snapcraft register <name>'
 base: core18 # the base snap is the execution environment for this snap
 version: '0.0.2' # just for humans, typically '1.2+git' or '1.3.2'
-summary: Snap for HPLIP Printer driver packages. # 79 char long summary
+summary: Snap for Foomatic Printer driver packages. # 79 char long summary
 description: |
-  This snap aims to provide modular snaps for HPLIP printer driver package.
+  This snap aims to provide modular snaps for Foomatic printer driver package.
 
 grade: devel # must be 'stable' to release into candidate/stable channels
 confinement: strict # use 'strict' once you have the right plugs and slots
@@ -11,11 +11,14 @@ confinement: strict # use 'strict' once you have the right plugs and slots
 apps:
   run-server:
     command: bin/server
-    daemon: simple
+    #daemon: simple
     environment:
      GS_LIB: "/snap/$SNAP_NAME/current/usr/share/ghostscript/9.26/Resource/Init"
-     PYTHONPATH: "/snap/$SNAP_NAME/current/lib/python2.7/site-packages/"
-     SNAP_BACKENDS: "hp,hpfax"
+     PYTHONPATH: "/snap/$SNAP_NAME/current/lib/python2.7/site-packages/"     
+     PERL5LIB: "/snap/$SNAP_NAME/current/usr/share/perl/5.26.1/"
+     FOOMATICDB: "/snap/$SNAP_NAME/current/share/foomatic"
+     FOOMATICBIN: "/snap/$SNAP_NAME/current/bin"
+    #  SNAP_BACKENDS: "hp,hpfax"
     plugs: 
     -  network 
     -  network-bind
@@ -65,8 +68,8 @@ parts:
   server:
     # See 'snapcraft plugins'
     plugin: autotools
-    source: https://github.com/dheeraj135/Printer-Applications-Framework.git
-    #source: ./Printer-Applications-Framework/
+    #source: https://github.com/dheeraj135/Printer-Applications-Framework.git
+    source: ./Printer-Applications-Framework/
     source-type: git
     build-packages:
       - libcups2
@@ -98,29 +101,29 @@ parts:
     plugin: dump
     source: ./temp
     stage-packages:
-     - cups-filters
-     - cups
+    - cups-filters
+    - cups
     prime:
-     - usr/lib/cups/filter/
-     - usr/share/cups/mime/
-     - usr/lib/cups/backend/
-     - -usr/lib/cups/backend/driverless
-     - -usr/lib/cups/backend/cups-brf
-     - etc/cups/snmp.conf
-     - usr/share/cups/usb/
+    - usr/lib/cups/filter/
+    - usr/share/cups/mime/
+    - usr/lib/cups/backend/
+    - -usr/lib/cups/backend/driverless
+    - -usr/lib/cups/backend/cups-brf
+    - etc/cups/snmp.conf
+    - usr/share/cups/usb/
     stage:
-     - usr/lib/cups/filter/
-     - usr/share/cups/mime/
-     - usr/lib/cups/backend/
-     - etc/cups/snmp.conf
-     - usr/share/cups/usb/
+    - usr/lib/cups/filter/
+    - usr/share/cups/mime/
+    - usr/lib/cups/backend/
+    - etc/cups/snmp.conf
+    - usr/share/cups/usb/
     organize:
-     #  /usr/lib/cups/filter/* : usr/lib/cups/filter/
-     #  /usr/share/cups/mime/* : usr/share/cups/mime/
-     #  /usr/lib/cups/backend/*: usr/lib/cups/backend/
-      usr/lib/cups/backend-available/* : usr/lib/cups/backend/
-     #  /etc/cups/snmp.conf: etc/cups/snmp.conf
-     #  /usr/share/cups/usb/: usr/share/cups/usb/
+    #  /usr/lib/cups/filter/* : usr/lib/cups/filter/
+    #  /usr/share/cups/mime/* : usr/share/cups/mime/
+    #  /usr/lib/cups/backend/*: usr/lib/cups/backend/
+     usr/lib/cups/backend-available/* : usr/lib/cups/backend/
+    #  /etc/cups/snmp.conf: etc/cups/snmp.conf
+    #  /usr/share/cups/usb/: usr/share/cups/usb/
 
   libraries:
     plugin: dump
@@ -134,40 +137,71 @@ parts:
     - libcupsfilters1
     - ghostscript
 
-    
-  hplip:
+  # foomatic-db:
+  #   plugin: autotools
+  #   #source: https://github.com/openprinting/foomatic-db.git
+  #   source: ./foomatic-db/
+  #   build-packages:
+  #   - perl
+  #   - cups
+  #   - gzip
+  #   stage-packages:
+  #   - perl
+  #   override-build: |
+  #     snapcraftctl build
+  #     rm $SNAPCRAFT_PART_INSTALL/usr/share/cups/model/foomatic-db-ppds
+  #     cd $SNAPCRAFT_PART_INSTALL/usr/share/cups/model && ln -s ../../../../share/foomatic/db/source/PPD/ foomatic-db-ppds
+  
+  foomatic-db-engine:
     plugin: autotools
-    source: https://sourceforge.net/projects/hplip/files/hplip/3.19.6/hplip-3.19.6.tar.gz
-    #source: ./hplipMod
-    after: [server]
-    configflags:
-      - --disable-scan-build
-      - --prefix=/
-      - --enable-new-hpcups
-      - --datadir=/usr/share/
-      - --disable-gui-build
+    #source: https://github.com/openprinting/foomatic-db-engine.git
+    source: ./foomatic-db-engine/
     build-packages:
-      - libcups2-dev
-      - libcups2
-      - python2.7-dev
-      - perl
-      - automake
-      - autoconf
-      - m4
-      - libusb-1.0-0-dev
-      - libsnmp-dev
-    build-environment:
-      - "CUPS_DATADIR" : "/root/parts/ippsample/install/share/cups/"
+    - perl
+    - gzip
+    - cups
     stage-packages:
-      - python2.7
-      - libcups2-dev
-      - libsnmp30
-      - libusb-1.0-0
-      - python-dbus
+    - perl
     override-build: |
-      patch -p0 < ../../../project/patch-prnt-snap-directory.patch
-      patch -p0 < ../../../project/hpfax-snap-directories.patch
-      snapcraftctl build
-      cp /lib/libImageProcessor* $SNAPCRAFT_PART_INSTALL/lib/
-      rm $SNAPCRAFT_PART_INSTALL/lib/libImageProcessor.so
-      cd $SNAPCRAFT_PART_INSTALL/lib/ && ln -s libImageProcessor*.so libImageProcessor.so
+     patch -p0 < ../../../project/foomatic-engine-foomaticbin.patch
+     snapcraftctl build
+     rm $SNAPCRAFT_PART_INSTALL/usr/lib/cups/driver/foomatic
+     cd $SNAPCRAFT_PART_INSTALL/usr/lib/cups/driver/ && ln -s ../../../../bin/foomatic-ppdfile foomatic
+  
+
+
+  # hplip:
+  #   plugin: autotools
+  #   #source: https://sourceforge.net/projects/hplip/files/hplip/3.19.6/hplip-3.19.6.tar.gz
+  #   source: ./hplip-3.19.6.tar.gz
+  #   after: [server]
+  #   configflags:
+  #     - --disable-scan-build
+  #     - --prefix=/
+  #     - --enable-new-hpcups
+  #     - --datadir=/usr/share/
+  #     - --disable-gui-build
+  #     - --disable-network-build
+  #   build-packages:
+  #     - libcups2-dev
+  #     - libcups2
+  #     - python2.7-dev
+  #     - perl
+  #     - automake
+  #     - autoconf
+  #     - m4
+  #     - libusb-1.0-0-dev
+  #   build-environment:
+  #     - "CUPS_DATADIR" : "/root/parts/ippsample/install/share/cups/"
+  #   stage-packages:
+  #     - python2.7-minimal
+  #     - libcups2-dev
+  #     - libusb-1.0-0
+  #     - python-dbus
+  #   override-build: |
+  #     patch -p0 < ../../../project/patch-prnt-snap-directory.patch
+  #     patch -p0 < ../../../project/hpfax-snap-directories.patch
+  #     snapcraftctl build
+  #     cp /lib/libImageProcessor* $SNAPCRAFT_PART_INSTALL/lib/
+  #     rm $SNAPCRAFT_PART_INSTALL/lib/libImageProcessor.so
+  #     cd $SNAPCRAFT_PART_INSTALL/lib/ && ln -s libImageProcessor*.so libImageProcessor.so
