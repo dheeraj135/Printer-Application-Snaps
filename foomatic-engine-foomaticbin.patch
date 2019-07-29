@@ -1,0 +1,12 @@
+Binary files ./.git/index and ../foomatic-engine-patch/.git/index differ
+diff -ruN ./makeDefaults.in ../foomatic-engine-patch/makeDefaults.in
+--- ./makeDefaults.in	2019-07-29 18:32:53.084065521 +0530
++++ ../foomatic-engine-patch/makeDefaults.in	2019-07-30 00:06:51.972432967 +0530
+@@ -33,6 +33,7 @@
+ 
+ # Binary directory; typically /usr/bin or somesuch.
+ \$bindir = '$ENV{BINDIR}';
++\$bindir = \$ENV\{FOOMATICBIN\} if \$ENV\{FOOMATICBIN\};
+ 
+ # System configuration list
+ \$sysdeps = {
