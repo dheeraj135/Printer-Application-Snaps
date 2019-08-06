@@ -39,6 +39,13 @@ apps:
     command: bin/ippprint
     environment:
      GS_LIB: "/snap/$SNAP_NAME/current/usr/share/ghostscript/9.26/Resource/Init"
+    plugs:
+    -  network
+    -  network-bind
+    -  avahi-control
+    -  raw-usb
+    -  home
+    -  hardware-observe
 
   run-ippeveprinter:
     command: bin/ippeveprinter
@@ -68,6 +75,10 @@ parts:
     source: https://github.com/dheeraj135/Printer-Applications-Framework.git
     #source: ./Printer-Applications-Framework/
     source-type: git
+    source-branch: master
+    # build-environment:
+    #   - DEBUG_LEVEL : "3"
+    #   - CFLAGS : "-g"
     build-packages:
       - libcups2
       - libcups2-dev
@@ -138,7 +149,7 @@ parts:
   hplip:
     plugin: autotools
     source: https://sourceforge.net/projects/hplip/files/hplip/3.19.6/hplip-3.19.6.tar.gz
-    #source: ./hplipMod
+    #source: ./hplip-3.19.6.tar.gz
     after: [server]
     configflags:
       - --disable-scan-build
