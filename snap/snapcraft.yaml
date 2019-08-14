@@ -71,6 +71,7 @@ parts:
      - -lib/libcups.a
      - -usr/share/cups/drv/
      - -usr/share/cups/ppdc/
+    #  - -usr/share/ipptool/
     after: [cups-filters]
 
   server:
@@ -163,10 +164,12 @@ parts:
         - libsasl2-2
         - libwind0-heimdal
         - libdb5.3
-        - cups
+        # - cups
     prime:
       - -usr/lib/cups/backend/driverless
       - -usr/lib/cups/driver/driverless
+    organize: 
+      usr/lib/cups/backend-available/* : usr/lib/cups/backend/
     after: [qpdf]
     
   hplip:
@@ -205,3 +208,5 @@ parts:
       cp /lib/libImageProcessor* $SNAPCRAFT_PART_INSTALL/lib/
       rm $SNAPCRAFT_PART_INSTALL/lib/libImageProcessor.so
       cd $SNAPCRAFT_PART_INSTALL/lib/ && ln -s libImageProcessor*.so libImageProcessor.so
+    # prime:
+    #   - -bin/hp*
