@@ -1,0 +1,12 @@
+diff -ruN ./mime/cupsfilters.convs.in ../cups-filtersT/mime/cupsfilters.convs.in
+--- ./mime/cupsfilters.convs.in	2018-02-08 03:38:43.000000000 +0530
++++ ../cups-filtersT/mime/cupsfilters.convs.in	2019-08-14 23:44:06.444198242 +0530
+@@ -112,3 +112,8 @@
+ text/html			text/plain			100	-
+ text/css			text/plain			100	-
+ 
++########################################################################
++#
++# Test conversion
++#
++image/pwg-raster	application/vnd.cups-raster 0 -

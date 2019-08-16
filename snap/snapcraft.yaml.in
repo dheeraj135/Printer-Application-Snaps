@@ -167,7 +167,7 @@ parts:
         - libdb5.3
         - cups
     override-build: |
-      patch -p0 < ../../../project/pwg-raster-mime.patch
+      @patch@patch -p0 < ../../../project/pwg-raster-mime.patch
       snapcraftctl build
     prime:
       - -usr/lib/cups/backend/driverless

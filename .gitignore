@@ -6,3 +6,6 @@ prime/
 gutenprint*
 .vscode/
 foomatic*
+pwg-hplip*
+cups-filters*
+autom4te.cache/
