@@ -583,7 +583,8 @@ PACKAGE_URL=''
 
 ac_subst_vars='LTLIBOBJS
 LIBOBJS
-patch
+ippbranch
+pwgpatch
 target_alias
 host_alias
 build_alias
@@ -626,6 +627,8 @@ SHELL'
 ac_subst_files=''
 ac_user_opts='
 enable_option_checking
+enable_pwgconv
+enable_pwgonly
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1247,6 +1250,13 @@ if test -n "$ac_init_help"; then
    esac
   cat <<\_ACEOF
 
+Optional Features:
+  --disable-option-checking  ignore unrecognized --enable/--with options
+  --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
+  --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
+  --disable-pwgconv    Remove pwg-raster to cups-raster conv.
+  --disable-pwgonly    Accept other file formats along with pwg-raster.
+
 Report bugs to the package provider.
 _ACEOF
 ac_status=$?
@@ -1678,7 +1688,31 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 ac_config_files="$ac_config_files snap/snapcraft.yaml"
 
-patch=""
+
+pwgpatch=""
+# Check whether --enable-pwgconv was given.
+if test "${enable_pwgconv+set}" = set; then :
+  enableval=$enable_pwgconv; case "${enableval}" in
+    yes) pwgpatch="";;
+    no) pwgpatch="#";;
+    *) as_fn_error $? "bad value ${enableval} for --disable-pwgconv" "$LINENO" 5;;esac
+else
+  patch=""
+fi
+
+
+ippbranch="pwg_standard"
+# Check whether --enable-pwgonly was given.
+if test "${enable_pwgonly+set}" = set; then :
+  enableval=$enable_pwgonly; case "${enableval}" in
+    yes) ippbranch="pwg_standard";;
+    no) ippbranch="master";;
+    *) as_fn_error $? "bad value ${enableval} for --disable-pwgonly" "$LINENO" 5;;esac
+fi
+
+
+
+
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure

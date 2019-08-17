@@ -58,7 +58,7 @@ parts:
     plugin: autotools
     #source: https://github.com/dheeraj135/ippsample.git
     source: ./ippsample
-    source-branch: pwg_standard
+    source-branch: @ippbranch@
     # organize:
     #   lib/libcups.a: lib/ippsample/libcups.a
     configflags:
@@ -167,7 +167,7 @@ parts:
         - libdb5.3
         - cups
     override-build: |
-      @patch@patch -p0 < ../../../project/pwg-raster-mime.patch
+      @pwgpatch@patch -p0 < ../../../project/pwg-raster-mime.patch
       snapcraftctl build
     prime:
       - -usr/lib/cups/backend/driverless
