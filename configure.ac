@@ -3,7 +3,7 @@
 
 AC_INIT([Printer-Application-Snaps],[0.0.1],[])
 
-AC_CONFIG_FILES(snap/snapcraft.yaml)
+AC_CONFIG_FILES(snap/local/snapcraft.yaml,[mv snap/local/snapcraft.yaml snap/snapcraft.yaml])
 # AC_CONFIG_FILES([build],[chmod u+x build])
 
 pwgpatch=""

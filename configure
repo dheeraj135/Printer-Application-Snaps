@@ -1686,8 +1686,9 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
 
 
 
-ac_config_files="$ac_config_files snap/snapcraft.yaml"
+ac_config_files="$ac_config_files snap/local/snapcraft.yaml"
 
+# AC_CONFIG_FILES([build],[chmod u+x build])
 
 pwgpatch=""
 # Check whether --enable-pwgconv was given.
@@ -2419,7 +2420,7 @@ cat >>$CONFIG_STATUS <<\_ACEOF || ac_write_fail=1
 for ac_config_target in $ac_config_targets
 do
   case $ac_config_target in
-    "snap/snapcraft.yaml") CONFIG_FILES="$CONFIG_FILES snap/snapcraft.yaml" ;;
+    "snap/local/snapcraft.yaml") CONFIG_FILES="$CONFIG_FILES snap/local/snapcraft.yaml" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac
@@ -2833,6 +2834,11 @@ which seems to be undefined.  Please make sure it is defined" >&2;}
 
   esac
 
+
+  case $ac_file$ac_mode in
+    "snap/local/snapcraft.yaml":F) mv snap/local/snapcraft.yaml snap/snapcraft.yaml ;;
+
+  esac
 done # for ac_tag
 
 
