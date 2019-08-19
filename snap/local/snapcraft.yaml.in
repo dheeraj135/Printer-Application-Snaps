@@ -59,8 +59,6 @@ parts:
     #source: https://github.com/dheeraj135/ippsample.git
     source: ./ippsample
     source-branch: master
-    # organize:
-    #   lib/libcups.a: lib/ippsample/libcups.a
     configflags:
       - --datarootdir=/usr/share/
     build-packages:
@@ -73,18 +71,13 @@ parts:
      - -usr/share/ipptool/
     #  - -usr/share/cups/drv/
     #  - -usr/share/cups/ppdc/
-    # after: [cups-filters]
 
   server:
-    # See 'snapcraft plugins'
     plugin: autotools
     #source: https://github.com/dheeraj135/Printer-Applications-Framework.git
     source: ./Printer-Applications-Framework/
     source-type: git
     source-branch: master
-    # build-environment:
-    #   - DEBUG_LEVEL : "3"
-    #   - CFLAGS : "-g"
     build-packages:
       - libcups2
       - libcups2-dev
@@ -111,70 +104,6 @@ parts:
 
     after: [ippsample]
   
-  # qpdf:
-  #   source: https://github.com/qpdf/qpdf/releases/download/release-qpdf-8.2.1/qpdf-8.2.1.tar.gz
-  #   plugin: autotools
-  #   build-packages:
-  #       - libjpeg-dev
-  #       - zlib1g-dev
-
-  # cups-filters:
-  #   #source: http://www.openprinting.org/download/cups-filters/cups-filters-1.21.2.tar.xz
-  #   source: ./cups-filters-1.21.2
-  #   plugin: autotools
-  #   configflags:
-  #       - --with-pdftops=pdftops
-  #       - --disable-ghostscript
-  #       - --disable-mutool
-  #   build-packages:
-  #       - autoconf
-  #       - autotools-dev
-  #       - pkg-config
-  #       - sharutils
-  #       - poppler-utils
-  #       - libglib2.0-dev
-  #       - liblcms2-dev
-  #       - libldap2-dev
-  #       - libpoppler-private-dev
-  #       - libpoppler-cpp-dev
-  #       - libjpeg-dev
-  #       - libpng-dev
-  #       - libtiff5-dev
-  #       - libijs-dev
-  #       - zlib1g-dev
-  #       - libfontconfig1-dev
-  #       - libdbus-1-dev
-  #       - libavahi-common-dev
-  #       - libavahi-client-dev
-  #       - libavahi-glib-dev
-  #       - librsvg2-bin
-  #       - liblouis-dev
-  #       - fonts-dejavu-core
-  #       - libcups2
-  #   stage-packages:
-  #       - poppler-utils
-  #       - libasn1-8-heimdal
-  #       - libavahi-glib1
-  #       - libgssapi3-heimdal
-  #       - libhcrypto4-heimdal
-  #       - libheimbase1-heimdal
-  #       - libheimntlm0-heimdal
-  #       - libhx509-5-heimdal
-  #       - libkrb5-26-heimdal
-  #       - libldap-2.4-2
-  #       - libroken18-heimdal
-  #       - libsasl2-2
-  #       - libwind0-heimdal
-  #       - libdb5.3
-  #       - cups
-  #   override-build: |
-  #     patch -p0 < ../../../project/pwg-raster-mime.patch
-  #     snapcraftctl build
-  #   prime:
-  #     - -usr/lib/cups/backend/driverless
-  #     - -usr/lib/cups/driver/driverless
-  #   after: [qpdf]
-  
   cups-filters:
     plugin: dump
     source: ./temp
@@ -196,12 +125,7 @@ parts:
      - etc/cups/snmp.conf
      - usr/share/cups/usb/
     organize:
-     #  /usr/lib/cups/filter/* : usr/lib/cups/filter/
-     #  /usr/share/cups/mime/* : usr/share/cups/mime/
-     #  /usr/lib/cups/backend/*: usr/lib/cups/backend/
       usr/lib/cups/backend-available/* : usr/lib/cups/backend/
-     #  /etc/cups/snmp.conf: etc/cups/snmp.conf
-     #  /usr/share/cups/usb/: usr/share/cups/usb/
 
   libraries:
     plugin: dump
