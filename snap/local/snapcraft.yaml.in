@@ -1,6 +1,6 @@
-name: pwg-hplip-printer-application # you probably want to 'snapcraft register <name>'
+name: hplip-printer-application # you probably want to 'snapcraft register <name>'
 base: core18 # the base snap is the execution environment for this snap
-version: '0.0.1' # just for humans, typically '1.2+git' or '1.3.2'
+version: '0.0.3' # just for humans, typically '1.2+git' or '1.3.2'
 summary: Snap for HPLIP Printer driver packages. # 79 char long summary
 description: |
   This snap aims to provide modular snaps for HPLIP printer driver package.
@@ -11,7 +11,7 @@ confinement: strict # use 'strict' once you have the right plugs and slots
 apps:
   run-server:
     command: bin/server
-    #daemon: simple
+    daemon: simple
     environment:
      GS_LIB: "/snap/$SNAP_NAME/current/usr/share/ghostscript/9.26/Resource/Init"
      PYTHONPATH: "/snap/$SNAP_NAME/current/lib/python2.7/site-packages/"
@@ -58,7 +58,7 @@ parts:
     plugin: autotools
     #source: https://github.com/dheeraj135/ippsample.git
     source: ./ippsample
-    source-branch: @ippbranch@
+    source-branch: master
     # organize:
     #   lib/libcups.a: lib/ippsample/libcups.a
     configflags:
@@ -70,6 +70,7 @@ parts:
     # - libcups2
     stage:
      - -lib/libcups.a
+     - -usr/share/ipptool/
     #  - -usr/share/cups/drv/
     #  - -usr/share/cups/ppdc/
     # after: [cups-filters]
@@ -167,7 +168,7 @@ parts:
   #       - libdb5.3
   #       - cups
   #   override-build: |
-  #     @pwgpatch@patch -p0 < ../../../project/pwg-raster-mime.patch
+  #     patch -p0 < ../../../project/pwg-raster-mime.patch
   #     snapcraftctl build
   #   prime:
   #     - -usr/lib/cups/backend/driverless
@@ -216,7 +217,7 @@ parts:
   
   hplip:
     plugin: autotools
-    #source: https://sourceforge.net/projects/hplip/files/hplip/3.19.6/hplip-3.19.6.tar.gz
+    # source: https://sourceforge.net/projects/hplip/files/hplip/3.19.6/hplip-3.19.6.tar.gz
     source: ./hplip-3.19.6.tar.gz
     after: [server]
     configflags:
@@ -243,6 +244,8 @@ parts:
       - libsnmp30
       - libusb-1.0-0
       - python-dbus
+    stage:
+      - -usr/share/ppd/HP/*
     override-build: |
       patch -p0 < ../../../project/patch-prnt-snap-directory.patch
       patch -p0 < ../../../project/hpfax-snap-directories.patch
@@ -250,3 +253,4 @@ parts:
       cp /lib/libImageProcessor* $SNAPCRAFT_PART_INSTALL/lib/
       rm $SNAPCRAFT_PART_INSTALL/lib/libImageProcessor.so
       cd $SNAPCRAFT_PART_INSTALL/lib/ && ln -s libImageProcessor*.so libImageProcessor.so
+      cp $SNAPCRAFT_PART_INSTALL/usr/share/ppd/HP/HP-Fax* $SNAPCRAFT_PART_INSTALL/usr/share/ppd/
