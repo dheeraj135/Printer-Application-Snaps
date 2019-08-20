@@ -4,3 +4,11 @@ printer*
 ippsample/
 prime/
 gutenprint*
+.vscode/
+foomatic*
+pwg-hplip*
+cups-filters*
+autom4te.cache/
+snap/snapcraft.yaml
+config.log
+config.status
