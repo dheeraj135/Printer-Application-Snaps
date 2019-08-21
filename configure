@@ -1702,12 +1702,12 @@ else
 fi
 
 
-ippbranch="pwg_standard"
+ippbranch="master"
 # Check whether --enable-pwgonly was given.
 if test "${enable_pwgonly+set}" = set; then :
   enableval=$enable_pwgonly; case "${enableval}" in
-    yes) ippbranch="pwg_standard";;
-    no) ippbranch="master";;
+    yes) ippbranch="master";;
+    no) ippbranch="all_docformats";;
     *) as_fn_error $? "bad value ${enableval} for --disable-pwgonly" "$LINENO" 5;;esac
 fi
 

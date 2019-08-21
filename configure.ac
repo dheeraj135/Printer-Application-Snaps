@@ -13,11 +13,11 @@ AC_ARG_ENABLE([pwgconv],[  --disable-pwgconv    Remove pwg-raster to cups-raster
     no) pwgpatch="#";;
     *) AC_MSG_ERROR([bad value ${enableval} for --disable-pwgconv]);;esac],[patch=""])
 
-ippbranch="pwg_standard"
+ippbranch="master"
 AC_ARG_ENABLE([pwgonly],[  --disable-pwgonly    Accept other file formats along with pwg-raster.],
 [case "${enableval}" in
-    yes) ippbranch="pwg_standard";;
-    no) ippbranch="master";;
+    yes) ippbranch="master";;
+    no) ippbranch="all_docformats";;
     *) AC_MSG_ERROR([bad value ${enableval} for --disable-pwgonly]);;esac])
 
 AC_SUBST([pwgpatch])

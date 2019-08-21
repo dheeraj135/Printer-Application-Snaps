@@ -56,9 +56,9 @@ apps:
 parts:
   ippsample:
     plugin: autotools
-    #source: https://github.com/dheeraj135/ippsample.git
-    source: ./ippsample
-    source-branch: master
+    source: https://github.com/dheeraj135/ippsample.git
+    # source: ./ippsample                     # For Debugging
+    source-branch: @ippbranch@
     configflags:
       - --datarootdir=/usr/share/
     build-packages:
