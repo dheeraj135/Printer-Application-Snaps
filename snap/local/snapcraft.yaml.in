@@ -65,7 +65,7 @@ parts:
     plugin: autotools
     source: https://github.com/dheeraj135/ippsample.git
     # source: ./ippsample                     # For Debugging
-    source-branch: master
+    source-branch: @ippbranch@
     configflags:
       - --datarootdir=/usr/share/
     build-packages:
