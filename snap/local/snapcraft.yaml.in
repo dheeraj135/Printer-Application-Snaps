@@ -110,7 +110,7 @@ parts:
   
   cups-filters:
     plugin: dump
-    source: ./temp  # Blank folder. snapcraft requires the source property.
+    source: ./convs
     stage-packages:
      - cups-filters
      - cups
@@ -129,6 +129,7 @@ parts:
      - etc/cups/snmp.conf
      - usr/share/cups/usb/
     organize:
+      @pwgpatch@pwgtoraster.convs: usr/share/cups/mime/
       usr/lib/cups/backend-available/* : usr/lib/cups/backend/
 
   libraries:
