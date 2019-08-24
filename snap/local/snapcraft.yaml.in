@@ -10,7 +10,7 @@ confinement: strict # use 'strict' once you have the right plugs and slots
 
 apps:
   run-server:
-    command: bin/server
+    command: bin/run-server.command
     daemon: simple
     environment:
      # Required for gstoraster filter.

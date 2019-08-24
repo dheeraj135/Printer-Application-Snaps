@@ -1707,7 +1707,7 @@ ippbranch="master"
 if test "${enable_pwgonly+set}" = set; then :
   enableval=$enable_pwgonly; case "${enableval}" in
     yes) ippbranch="master";;
-    no) ippbranch="all_docformats";;
+    no) ippbranch="all_docformat";;
     *) as_fn_error $? "bad value ${enableval} for --disable-pwgonly" "$LINENO" 5;;esac
 fi
 

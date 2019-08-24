@@ -17,7 +17,7 @@ ippbranch="master"
 AC_ARG_ENABLE([pwgonly],[  --disable-pwgonly    Accept other file formats along with pwg-raster.],
 [case "${enableval}" in
     yes) ippbranch="master";;
-    no) ippbranch="all_docformats";;
+    no) ippbranch="all_docformat";;
     *) AC_MSG_ERROR([bad value ${enableval} for --disable-pwgonly]);;esac])
 
 AC_SUBST([pwgpatch])
