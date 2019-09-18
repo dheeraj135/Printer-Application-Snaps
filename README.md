@@ -15,7 +15,7 @@ Using the snapcraft.yaml file:
 ```
 ./configure --disable-pwgonly
 snapcraft
-snap install hplip-printer-application_VERSION_ARCH.snap
+snap install hplip-printer-application_VERSION_ARCH.snap --dangerous
 snap connect hplip-printer-application:avahi-control
 snap connect hplip-printer-application:raw-usb
 snap connect hplip-printer-application:hardware-observe
