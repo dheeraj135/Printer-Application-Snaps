@@ -13,6 +13,7 @@ snap restart hplip-printer-application
 ```
 Using the snapcraft.yaml file:
 ```
+./configure --disable-pwgonly
 snapcraft
 snap install hplip-printer-application_VERSION_ARCH.snap
 snap connect hplip-printer-application:avahi-control
