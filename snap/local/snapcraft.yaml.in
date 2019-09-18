@@ -74,8 +74,8 @@ parts:
 
   server:
     plugin: autotools
-    #source: https://github.com/dheeraj135/Printer-Applications-Framework.git
-    source: ./Printer-Applications-Framework/
+    source: https://github.com/dheeraj135/Printer-Applications-Framework.git
+    #source: ./Printer-Applications-Framework/
     source-type: git
     source-branch: master
     build-packages:
@@ -142,8 +142,8 @@ parts:
   
   hplip:
     plugin: autotools
-    # source: https://sourceforge.net/projects/hplip/files/hplip/3.19.6/hplip-3.19.6.tar.gz
-    source: ./hplip-3.19.6.tar.gz
+    source: https://sourceforge.net/projects/hplip/files/hplip/3.19.6/hplip-3.19.6.tar.gz
+    # source: ./hplip-3.19.6.tar.gz
     after: [server]
     configflags:
       - --disable-scan-build
